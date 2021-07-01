@@ -1,0 +1,6 @@
+{
+  "editor.fontFamily": "'Victor Mono'",
+"terminal.integrated.fontFamily": "'Victor Mono'",
+"terminal.integrated.fontSize": 11,
+"debug.console.fontFamily": "'Victor Mono'"
+}
