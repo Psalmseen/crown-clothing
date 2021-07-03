@@ -3,7 +3,6 @@ import React from "react";
 import CollectionItem from "../../component/collection-item/collection-item.component";
 import { connect } from "react-redux";
 import "./collection.style.scss";
-import { createStructuredSelector } from "reselect";
 import { selectCollection } from "../../redux/shop/shop.selector";
 
 const CollectionPage = ({ collection }) => {
