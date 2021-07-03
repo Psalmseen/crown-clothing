@@ -18,6 +18,7 @@ class App extends React.Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
+    console.log(process.env.NODE_ENV)
     const { setCurrentUser } = this.props; // pulls setCurrentUser from the props provided by the connect HOC
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
       if (userAuth) {
