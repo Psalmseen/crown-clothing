@@ -8,17 +8,19 @@ import Homepage from "./pages/homepage/homepage.component";
 import ShopPage from "./pages/shop/shop.component";
 import Header from "./component/header/header.component";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up-page/sign-in-and-sign-up-page.component";
-import CheckoutPage from './pages/checkout/checkoutpage.component'
+import CheckoutPage from "./pages/checkout/checkoutpage.component";
 
-import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
+import {
+  auth,
+  createUserProfileDocument
+} from "./firebase/firebase.utils";
 import { setCurrentUser } from "./redux/user/users.actions";
-import { selectCurrentUser } from './redux/user/user.selectors'
-
+import { selectCurrentUser } from "./redux/user/user.selectors";
 class App extends React.Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    console.log(process.env.NODE_ENV)
+    console.log(process.env.NODE_ENV);
     const { setCurrentUser } = this.props; // pulls setCurrentUser from the props provided by the connect HOC
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
       if (userAuth) {
@@ -32,6 +34,7 @@ class App extends React.Component {
         });
       } else {
         setCurrentUser(userAuth); // takes userAuth  as the payload and sets it as the currentUser
+        
       }
     });
   }
@@ -46,7 +49,7 @@ class App extends React.Component {
         <Switch>
           <Route exact path="/" component={Homepage} />
           <Route path="/shop" component={ShopPage} />
-          <Route exact path='/checkout' component={CheckoutPage} />
+          <Route exact path="/checkout" component={CheckoutPage} />
           <Route
             path="/signin"
             render={() =>
@@ -63,11 +66,11 @@ class App extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   // pulls the user from state(root reducer)
   // currentUser: user.currentUser,
   // ** always use createStructuredSelector for ur selectors
-  currentUser: selectCurrentUser(state)
+  currentUser: selectCurrentUser(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
