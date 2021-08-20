@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
@@ -10,39 +10,19 @@ import Header from "./component/header/header.component";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up-page/sign-in-and-sign-up-page.component";
 import CheckoutPage from "./pages/checkout/checkoutpage.component";
 
-import {
-  auth,
-  createUserProfileDocument
-} from "./firebase/firebase.utils";
-import { setCurrentUser } from "./redux/user/users.actions";
 import { selectCurrentUser } from "./redux/user/user.selectors";
-class App extends React.Component {
-  unsubscribeFromAuth = null;
+import { checkUserSession } from "./redux/user/users.actions"
 
-  componentDidMount() {
-    console.log(process.env.NODE_ENV);
-    const { setCurrentUser } = this.props; // pulls setCurrentUser from the props provided by the connect HOC
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
-      if (userAuth) {
-        const userRef = await createUserProfileDocument(userAuth);
+const App = ({checkUserSession, currentUser}) => {
 
-        userRef.onSnapshot((snapShot) => {
-          setCurrentUser({
-            id: snapShot.id,
-            ...snapShot.data(),
-          });
-        });
-      } else {
-        setCurrentUser(userAuth); // takes userAuth  as the payload and sets it as the currentUser
-        
-      }
-    });
-  }
+  useEffect(() => {
+    checkUserSession()
+  }, [checkUserSession])
+  
+    
+   
 
-  componentWillUnmount() {
-    this.unsubscribeFromAuth();
-  }
-  render() {
+ 
     return (
       <div>
         <Header />
@@ -53,7 +33,7 @@ class App extends React.Component {
           <Route
             path="/signin"
             render={() =>
-              this.props.currentUser ? (
+              currentUser ? (
                 <Redirect to="/" />
               ) : (
                 <SignInAndSignUpPage />
@@ -64,7 +44,6 @@ class App extends React.Component {
       </div>
     );
   }
-}
 
 const mapStateToProps = (state) => ({
   // pulls the user from state(root reducer)
@@ -73,8 +52,7 @@ const mapStateToProps = (state) => ({
   currentUser: selectCurrentUser(state),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  // allows us to use the key as a props for the app component
-  setCurrentUser: (user) => dispatch(setCurrentUser(user)),
-});
+const mapDispatchToProps = dispatch => ({
+  checkUserSession : () => dispatch(checkUserSession())
+}) 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
